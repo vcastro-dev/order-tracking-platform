@@ -68,6 +68,5 @@ A comunicação entre os serviços é orquestrada por meio de eventos no Kafka. 
 │   └── dashboard
 └── libs
     ├── shared-events     # contratos de eventos
-    ├── shared-db         # configuração DB comum
     └── shared-utils      # utilitários
 ```
