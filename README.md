@@ -1,108 +1,73 @@
-🏗️ Plataforma de Processamento de Pedidos & Rastreamento
-Este projeto é uma plataforma de processamento de pedidos e rastreamento em tempo real, desenvolvida para demonstrar a construção de sistemas modernos, escaláveis e resilientes. A arquitetura é baseada em microserviços, mensageria assíncrona e princípios de Domain-Driven Design (DDD).
+# 🏗️ Order Processing & Tracking Platform
 
-🎯 Objetivo e Proposta de Valor
-O objetivo principal é simular um sistema de e-commerce que recebe um pedido, o processa, envia notificações e permite o rastreamento em tempo real. O projeto serve como um case prático para demonstrar experiência em:
+Este projeto é uma simulação de uma **plataforma de processamento de pedidos e rastreamento em tempo real**, desenvolvida para praticar conceitos de **arquitetura de software moderna**, **microserviços** e **aplicações de larga escala**.
 
-Arquitetura Limpa (Hexagonal) & DDD: Desenho do software focado na lógica de negócio, desacoplando a aplicação da infraestrutura.
+---
 
-Arquitetura Orientada a Eventos: Comunicação assíncrona e desacoplada entre serviços via Kafka.
+### 🎯 Objetivo e Proposta de Valor
 
-Microserviços: Divisão de responsabilidades em serviços autônomos.
+Demonstrar experiência em:
 
-Observabilidade: Monitoramento e rastreamento distribuído com OpenTelemetry, Prometheus e Grafana.
+- **Arquitetura Limpa (Hexagonal) & DDD:** Desenho do software focado na lógica de negócio, desacoplando a aplicação da infraestrutura.
+- **NestJS avançado** no backend.
+- **Arquitetura orientada a eventos** e **mensageria** (Kafka).
+- **Microserviços desacoplados.**
+- **Bancos de dados relacionais e não-relacionais** (PostgreSQL + Redis).
+- **Observabilidade e tracing distribuído** (OpenTelemetry, Prometheus + Grafana).
+- **Escalabilidade horizontal simulada.**
+- **Boas práticas de engenharia de software** (testes, CI/CD, logging estruturado).
 
-Persistência Híbrida: Uso estratégico de bancos de dados relacionais (PostgreSQL) para persistência de dados críticos e não-relacionais (Redis) para caching de alta velocidade.
+---
 
-Boas Práticas de Engenharia: Contêineres, testes unitários, e preparação para CI/CD.
+### 🧩 Arquitetura
 
-🧩 Arquitetura do Sistema
 A comunicação entre os serviços é orquestrada por meio de eventos no Kafka. Cada serviço é uma unidade independente, focada em uma única responsabilidade de negócio.
 
-Serviços
-API Gateway: Ponto de entrada da aplicação. Recebe novos pedidos via HTTP e publica um evento order.created no tópico do Kafka.
+**Serviços principais:**
 
-Order Service: Consome o evento order.created, valida o pedido, calcula o estoque (simulado) e persiste o pedido no PostgreSQL. Após o processamento, publica o evento order.processed.
+- **API Gateway** → Recebe pedidos e publica eventos `order.created` no Kafka.
+- **Order Service** → Processa pedidos, valida estoque e salva no PostgreSQL. Publica `order.processed`.
+- **Notification Service** → Consome eventos e envia notificações.
+- **Tracking Service** → Gerencia status do pedido (Redis + PostgreSQL) e atualiza o frontend via WebSocket.
+- **Dashboard (React)** → Consulta pedidos e status em tempo real.
 
-Tracking Service: Mantém o status do pedido em tempo real no Redis e o histórico de rastreamento no PostgreSQL. Expõe um endpoint de WebSocket para atualizações em tempo real.
+**Infraestrutura:**
 
-Notification Service: Consome o evento order.processed e simula o envio de e-mail ou notificação.
+- **Kafka** → Mensageria para comunicação assíncrona.
+- **PostgreSQL** → Persistência principal.
+- **Redis** → Cache para consultas rápidas.
+- **Prometheus + Grafana** → Métricas e monitoramento.
+- **OpenTelemetry** → Tracing distribuído.
 
-Dashboard (React): Interface de usuário que permite criar pedidos e visualizar o status de rastreamento em tempo real.
+---
 
-Infraestrutura
-Kafka: Broker de mensagens para a comunicação assíncrona.
+### 🚀 Tecnologias
 
-PostgreSQL: Banco de dados relacional para a persistência de dados críticos (pedidos, histórico de rastreamento).
+- [Node.js](https://nodejs.org/)
+- [NestJS](https://nestjs.com/)
+- [Kafka](https://kafka.apache.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Redis](https://redis.io/)
+- [React](https://react.dev/)
+- [Prometheus](https://prometheus.io/) + [Grafana](https://grafana.com/)
+- [OpenTelemetry](https://opentelemetry.io/)
+- [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
+- [Nx](https://nx.dev/) ou [Turborepo](https://turborepo.org/)
 
-Redis: Banco de dados em memória para caching e armazenamento de dados de rastreamento em tempo real.
+---
 
-Prometheus & Grafana: Coleta e visualização de métricas de performance e saúde da aplicação.
+### 📦 Estrutura do repositório (monorepo)
 
-OpenTelemetry: Ferramenta para rastreamento distribuído entre os serviços, essencial para depuração em arquiteturas de microsserviços.
-
-📦 Estrutura do Repositório (Monorepo)
-O projeto utiliza um monorepo para facilitar a gestão de múltiplos serviços e o compartilhamento de código entre eles.
-
+```bash
 .
 ├── apps
-│ ├── api-gateway
-│ ├── order-service
-│ ├── tracking-service
-│ ├── notification-service
-│ └── dashboard
+│   ├── api-gateway
+│   ├── order-service
+│   ├── notification-service
+│   ├── tracking-service
+│   └── dashboard
 └── libs
-├── shared-events # Contratos e tipos de eventos
-├── shared-db # Configuração comum de banco de dados
-└── shared-utils # Funções utilitárias
-🚀 Tecnologias Principais
-Backend: NestJS
-
-Frontend: React
-
-Mensageria: Kafka
-
-Banco de Dados: PostgreSQL & Redis
-
-Monitoramento: Prometheus & Grafana
-
-Rastreamento: OpenTelemetry
-
-Ferramentas: Docker, pnpm, Nx
-
-🛠️ Como Rodar Localmente
-Pré-requisitos: Certifique-se de ter Docker e Docker Compose instalados.
-
-Clone o Repositório: git clone [url-do-seu-repositorio]
-
-Crie os Arquivos de Ambiente: Crie um arquivo .env na raiz do projeto com suas variáveis de ambiente locais (ex: POSTGRES_USER=dev_user).
-
-Inicie os Contêineres: Execute o comando a seguir na raiz do repositório para subir toda a infraestrutura e os serviços de desenvolvimento:
-
-Bash
-
-docker-compose up --build
-Acesse a Aplicação:
-
-API Gateway: http://localhost:3000
-
-Dashboard: http://localhost:3001 (ou a porta que você configurou)
-
-Grafana: http://localhost:3002 (ou a porta que você configurou)
-
-📌 O que este projeto demonstra
-Este projeto é uma prova prática de habilidades em engenharia de software, mostrando a capacidade de:
-
-Arquitetar e implementar sistemas complexos e distribuídos.
-
-Aplicar princípios de design avançados como DDD e Arquitetura Limpa (Hexagonal).
-
-Utilizar mensageria para desacoplar serviços e garantir a resiliência do sistema.
-
-Trabalhar com múltiplos bancos de dados e otimizar o acesso a dados.
-
-Configurar e gerenciar a infraestrutura com Docker e Docker Compose.
-
-Garantir a observabilidade de uma arquitetura de microsserviços.
-
-Escrever código de alta qualidade, modular e testável.
+    ├── shared-events     # contratos de eventos
+    ├── shared-db         # configuração DB comum
+    └── shared-utils      # utilitários
+```
